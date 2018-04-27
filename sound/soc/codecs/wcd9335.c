@@ -7565,8 +7565,8 @@ static int tasha_mad_input_put(struct snd_kcontrol *kcontrol,
 
 	if (tasha_mad_input >= ARRAY_SIZE(tasha_conn_mad_text)) {
 		dev_err(codec->dev,
-				"%s: tasha_mad_input = %d out of bounds\n",
-				__func__, tasha_mad_input);
+			"%s: tasha_mad_input = %d out of bounds\n",
+			__func__, tasha_mad_input);
 		return -EINVAL;
 	}
 

@@ -1379,8 +1379,8 @@ static int tomtom_mad_input_put(struct snd_kcontrol *kcontrol,
 
 	if (tomtom_mad_input >= ARRAY_SIZE(tomtom_conn_mad_text)) {
 		dev_err(codec->dev,
-				"%s: tomtom_mad_input = %d out of bounds\n",
-				__func__, tomtom_mad_input);
+			"%s: tomtom_mad_input = %d out of bounds\n",
+			__func__, tomtom_mad_input);
 		return -EINVAL;
 	}
 

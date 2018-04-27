@@ -338,7 +338,7 @@ static long avtimer_ioctl(struct file *file, unsigned int ioctl_num,
 
 		if (rc) {
 			pr_err("%s: Error: Invalid AV Timer tick, rc = %d\n",
-					__func__, rc);
+				__func__, rc);
 			return rc;
 		}
 
