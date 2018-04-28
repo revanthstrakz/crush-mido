@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2016, The Linux Foundation. All rights reserved.
+ * Copyright (c) 2015-2017, The Linux Foundation. All rights reserved.
  * Copyright (C) 2018 XiaoMi, Inc.
  *
  * This program is free software; you can redistribute it and/or modify
@@ -321,6 +321,7 @@ static int service_locator_send_msg(struct pd_qmi_client_data *pd)
 			goto out;
 		}
 		if (resp->domain_list_len >  resp->total_domains) {
+			/* Always read total_domains from the response msg */
 			resp->domain_list_len = resp->total_domains;
 		}
 		/* Copy the response*/
