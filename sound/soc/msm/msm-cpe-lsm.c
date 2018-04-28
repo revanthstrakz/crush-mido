@@ -1869,10 +1869,11 @@ static int msm_cpe_lsm_reg_model(struct snd_pcm_substream *substream,
 
 	lsm_ops->lsm_get_snd_model_offset(cpe->core_handle,
 			session, &offset);
+	/* Check if 'p_info->param_size + offset' crosses U32_MAX. */
 	if (p_info->param_size > U32_MAX - offset) {
 		dev_err(rtd->dev,
-				"%s: Invalid param_size %d\n",
-				__func__, p_info->param_size);
+			"%s: Invalid param_size %d\n",
+			__func__, p_info->param_size);
 		return -EINVAL;
 	}
 	session->snd_model_size = p_info->param_size + offset;
@@ -2631,9 +2632,14 @@ static int msm_cpe_lsm_ioctl_compat(struct snd_pcm_substream *substream,
 	case SNDRV_LSM_REG_SND_MODEL_V2:
 	case SNDRV_LSM_SET_PARAMS:
 	case SNDRV_LSM_SET_MODULE_PARAMS:
+		/*
+		 * In ideal cases, the compat_ioctl should never be called
+		 * with the above unlocked ioctl commands. Print error
+		 * and return error if it does.
+		 */
 		dev_err(rtd->dev,
-				"%s: Invalid cmd for compat_ioctl\n",
-				__func__);
+			"%s: Invalid cmd for compat_ioctl\n",
+			__func__);
 		err = -EINVAL;
 		break;
 	default:
