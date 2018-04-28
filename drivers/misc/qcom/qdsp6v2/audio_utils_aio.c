@@ -863,7 +863,7 @@ static long audio_aio_process_event_req_compat(struct q6audio_aio *audio,
 	rc = audio_aio_process_event_req_common(audio, &usr_evt);
 	if (rc < 0) {
 		pr_err("%s: audio process event failed, rc = %ld",
-				__func__, rc);
+			__func__, rc);
 		return rc;
 	}
 
