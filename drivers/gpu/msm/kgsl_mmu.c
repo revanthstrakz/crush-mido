@@ -431,11 +431,17 @@ void kgsl_mmu_put_gpuaddr(struct kgsl_memdesc *memdesc)
 	if (!kgsl_memdesc_is_global(memdesc))
 		unmap_fail = kgsl_mmu_unmap(pagetable, memdesc);
 
+	/*
+	 * Do not free the gpuaddr/size if unmap fails. Because if we
+	 * try to map this range in future, the iommu driver will throw
+	 * a BUG_ON() because it feels we are overwriting a mapping.
+	*/
 	if (PT_OP_VALID(pagetable, put_gpuaddr) && (unmap_fail == 0))
 		pagetable->pt_ops->put_gpuaddr(memdesc);
 
 	if (!kgsl_memdesc_is_global(memdesc))
 		memdesc->gpuaddr = 0;
+
 	memdesc->pagetable = NULL;
 }
 EXPORT_SYMBOL(kgsl_mmu_put_gpuaddr);

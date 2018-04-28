@@ -735,7 +735,7 @@ static int msm_lsm_ioctl_shared(struct snd_pcm_substream *substream,
 		if (copy_from_user(&session_data, arg,
 				   sizeof(session_data))) {
 			dev_err(rtd->dev, "%s: %s: copy_from_user failed\n",
-					__func__, "LSM_SET_SESSION_DATA");
+				__func__, "LSM_SET_SESSION_DATA");
 			return -EFAULT;
 		}
 
@@ -985,37 +985,37 @@ static int msm_lsm_ioctl_shared(struct snd_pcm_substream *substream,
 
 		if (copy_from_user(&enable, arg, sizeof(enable))) {
 			dev_err(rtd->dev, "%s: %s: copy_frm_user failed\n",
-					__func__, "LSM_LAB_CONTROL");
+				__func__, "LSM_LAB_CONTROL");
 			return -EFAULT;
 		}
 
 		dev_dbg(rtd->dev, "%s: ioctl %s, enable = %d\n",
-				 __func__, "SNDRV_LSM_LAB_CONTROL", enable);
+			 __func__, "SNDRV_LSM_LAB_CONTROL", enable);
 		if (!prtd->lsm_client->started) {
 			if (prtd->lsm_client->lab_enable == enable) {
 				dev_dbg(rtd->dev,
-						"%s: Lab for session %d already %s\n",
-						__func__, prtd->lsm_client->session,
-						enable ? "enabled" : "disabled");
+					"%s: Lab for session %d already %s\n",
+					__func__, prtd->lsm_client->session,
+					enable ? "enabled" : "disabled");
 				rc = 0;
 				break;
 			}
 			rc = q6lsm_lab_control(prtd->lsm_client, enable);
 			if (rc) {
 				dev_err(rtd->dev,
-						"%s: ioctl %s failed rc %d to %s lab for session %d\n",
-						__func__, "SNDRV_LAB_CONTROL", rc,
-						enable ? "enable" : "disable",
-						prtd->lsm_client->session);
+					"%s: ioctl %s failed rc %d to %s lab for session %d\n",
+					__func__, "SNDRV_LAB_CONTROL", rc,
+					enable ? "enable" : "disable",
+					prtd->lsm_client->session);
 			} else {
 				rc = msm_lsm_lab_buffer_alloc(prtd,
-						enable ? LAB_BUFFER_ALLOC
-						: LAB_BUFFER_DEALLOC);
+					enable ? LAB_BUFFER_ALLOC
+					: LAB_BUFFER_DEALLOC);
 				if (rc)
 					dev_err(rtd->dev,
-							"%s: msm_lsm_lab_buffer_alloc failed rc %d for %s",
-							__func__, rc,
-							enable ? "ALLOC" : "DEALLOC");
+						"%s: msm_lsm_lab_buffer_alloc failed rc %d for %s",
+						__func__, rc,
+						enable ? "ALLOC" : "DEALLOC");
 				if (!rc)
 					prtd->lsm_client->lab_enable = enable;
 			}
@@ -1058,6 +1058,7 @@ static int msm_lsm_ioctl_shared(struct snd_pcm_substream *substream,
 	return rc;
 }
 #ifdef CONFIG_COMPAT
+
 struct snd_lsm_sound_model_v2_32 {
 	compat_uptr_t data;
 	compat_uptr_t confidence_level;
@@ -1127,8 +1128,7 @@ static int msm_lsm_ioctl_compat(struct snd_pcm_substream *substream,
 		if (copy_from_user(&userarg32, arg, sizeof(userarg32))) {
 			dev_err(rtd->dev, "%s: err copyuser ioctl %s\n",
 				__func__, "SNDRV_LSM_EVENT_STATUS");
-			err = -EFAULT;
-			goto done;
+			return -EFAULT;
 		}
 
 		if (userarg32.payload_size >
@@ -1281,8 +1281,7 @@ static int msm_lsm_ioctl_compat(struct snd_pcm_substream *substream,
 			dev_err(rtd->dev,
 				"%s: %s: not supported if not using topology\n",
 				__func__, "SET_MODULE_PARAMS_32");
-			err = -EINVAL;
-			goto done;
+			return -EINVAL;
 		}
 
 		if (copy_from_user(&p_data_32, arg,
@@ -1378,9 +1377,14 @@ static int msm_lsm_ioctl_compat(struct snd_pcm_substream *substream,
 	case SNDRV_LSM_REG_SND_MODEL_V2:
 	case SNDRV_LSM_SET_PARAMS:
 	case SNDRV_LSM_SET_MODULE_PARAMS:
+		/*
+		 * In ideal cases, the compat_ioctl should never be called
+		 * with the above unlocked ioctl commands. Print error
+		 * and return error if it does.
+		 */
 		dev_err(rtd->dev,
-				"%s: Invalid cmd for compat_ioctl\n",
-				__func__);
+			"%s: Invalid cmd for compat_ioctl\n",
+			__func__);
 		err = -EINVAL;
 		break;
 	default:
@@ -1485,8 +1489,7 @@ static int msm_lsm_ioctl(struct snd_pcm_substream *substream,
 			dev_err(rtd->dev,
 				"%s: %s: not supported if not using topology\n",
 				__func__, "SET_MODULE_PARAMS");
-			err = -EINVAL;
-			goto done;
+			return -EINVAL;
 		}
 
 		if (copy_from_user(&p_data, arg,

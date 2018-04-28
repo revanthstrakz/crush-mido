@@ -2692,7 +2692,7 @@ int __qseecom_process_fsm_key_svc_cmd(struct qseecom_dev_handle *data_ptr,
 }
 
 static int __validate_send_service_cmd_inputs(struct qseecom_dev_handle *data,
-		struct qseecom_send_svc_cmd_req *req)
+				struct qseecom_send_svc_cmd_req *req)
 {
 	if (!req || !req->resp_buf || !req->cmd_req_buf) {
 		pr_err("req or cmd buffer or response buffer is null\n");
@@ -2720,22 +2720,22 @@ static int __validate_send_service_cmd_inputs(struct qseecom_dev_handle *data,
 	}
 
 	if (((uintptr_t)req->cmd_req_buf <
-			data->client.user_virt_sb_base) ||
-			((uintptr_t)req->cmd_req_buf >=
-			(data->client.user_virt_sb_base + data->client.sb_length))) {
+				data->client.user_virt_sb_base) ||
+		((uintptr_t)req->cmd_req_buf >=
+		(data->client.user_virt_sb_base + data->client.sb_length))) {
 		pr_err("cmd buffer address not within shared bufffer\n");
 		return -EINVAL;
 	}
 	if (((uintptr_t)req->resp_buf <
-			data->client.user_virt_sb_base)  ||
-			((uintptr_t)req->resp_buf >=
-			(data->client.user_virt_sb_base + data->client.sb_length))) {
+				data->client.user_virt_sb_base)  ||
+		((uintptr_t)req->resp_buf >=
+		(data->client.user_virt_sb_base + data->client.sb_length))) {
 		pr_err("response buffer address not within shared bufffer\n");
 		return -EINVAL;
 	}
 	if ((req->cmd_req_len == 0) || (req->resp_len == 0) ||
-			(req->cmd_req_len > data->client.sb_length) ||
-			(req->resp_len > data->client.sb_length)) {
+		(req->cmd_req_len > data->client.sb_length) ||
+		(req->resp_len > data->client.sb_length)) {
 		pr_err("cmd buf length or response buf length not valid\n");
 		return -EINVAL;
 	}
@@ -2748,7 +2748,7 @@ static int __validate_send_service_cmd_inputs(struct qseecom_dev_handle *data,
 		pr_debug("Not enough memory to fit cmd_buf.\n");
 		pr_debug("resp_buf. Required: %u, Available: %zu\n",
 				(req->cmd_req_len + req->resp_len),
-				data->client.sb_length);
+					data->client.sb_length);
 		return -ENOMEM;
 	}
 	if ((uintptr_t)req->cmd_req_buf > (ULONG_MAX - req->cmd_req_len)) {
@@ -2760,16 +2760,16 @@ static int __validate_send_service_cmd_inputs(struct qseecom_dev_handle *data,
 		return -EINVAL;
 	}
 	if (data->client.user_virt_sb_base >
-			(ULONG_MAX - data->client.sb_length)) {
+					(ULONG_MAX - data->client.sb_length)) {
 		pr_err("Integer overflow in user_virt_sb_base & sb_length\n");
 		return -EINVAL;
 	}
 	if ((((uintptr_t)req->cmd_req_buf + req->cmd_req_len) >
-			((uintptr_t)data->client.user_virt_sb_base +
-			data->client.sb_length)) ||
-			(((uintptr_t)req->resp_buf + req->resp_len) >
-			((uintptr_t)data->client.user_virt_sb_base +
-			data->client.sb_length))) {
+		((uintptr_t)data->client.user_virt_sb_base +
+					data->client.sb_length)) ||
+		(((uintptr_t)req->resp_buf + req->resp_len) >
+		((uintptr_t)data->client.user_virt_sb_base +
+					data->client.sb_length))) {
 		pr_err("cmd buf or resp buf is out of shared buffer region\n");
 		return -EINVAL;
 	}
@@ -2777,7 +2777,7 @@ static int __validate_send_service_cmd_inputs(struct qseecom_dev_handle *data,
 }
 
 static int qseecom_send_service_cmd(struct qseecom_dev_handle *data,
-		void __user *argp)
+				void __user *argp)
 {
 	int ret = 0;
 	struct qseecom_client_send_service_ireq send_svc_ireq;
@@ -2787,10 +2787,11 @@ static int qseecom_send_service_cmd(struct qseecom_dev_handle *data,
 	void   *send_req_ptr;
 	size_t req_buf_size;
 
+	/*struct qseecom_command_scm_resp resp;*/
 
 	if (copy_from_user(&req,
-			(void __user *)argp,
-			sizeof(req))) {
+				(void __user *)argp,
+				sizeof(req))) {
 		pr_err("copy_from_user failed\n");
 		return -EFAULT;
 	}

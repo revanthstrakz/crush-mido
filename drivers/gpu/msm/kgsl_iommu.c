@@ -1406,6 +1406,7 @@ static int _setstate_alloc(struct kgsl_device *device,
 	ret = kgsl_sharedmem_alloc_contig(device, &iommu->setstate, PAGE_SIZE);
 
 	if (!ret) {
+		/* Mark the setstate memory as read only */
 		iommu->setstate.flags |= KGSL_MEMFLAGS_GPUREADONLY;
 
 		kgsl_sharedmem_set(device, &iommu->setstate, 0, 0, PAGE_SIZE);

@@ -1,5 +1,7 @@
-/* Copyright (c) 2013-2014, 2016-2017,The Linux Foundation. All rights reserved.
- * Copyright (C) 2018 XiaoMi, Inc.
+/*
+* Copyright (c) 2013-2014, 2016-2017, The Linux Foundation. All rights reserved.
+* Copyright (C) 2018 XiaoMi, Inc.
+*
 * This program is free software; you can redistribute it and/or modify
 * it under the terms of the GNU General Public License version 2 and
 * only version 2 as published by the Free Software Foundation.
@@ -762,14 +764,14 @@ int msm_dolby_dap_param_to_set_control_put(struct snd_kcontrol *kcontrol,
 			current_offset = dolby_dap_params_offset[idx] + offset;
 			if (current_offset >= TOTAL_LENGTH_DOLBY_PARAM) {
 				pr_err("%s: invalid offset %d at idx %d\n",
-						__func__, offset, idx);
+				__func__, offset, idx);
 				return -EINVAL;
 			}
 			if ((0 == length) || (current_offset + length - 1
-					< current_offset) || (current_offset + length
-					> TOTAL_LENGTH_DOLBY_PARAM)) {
+				< current_offset) || (current_offset + length
+				> TOTAL_LENGTH_DOLBY_PARAM)) {
 				pr_err("%s: invalid length %d at idx %d\n",
-						__func__, length, idx);
+				__func__, length, idx);
 				return -EINVAL;
 			}
 			dolby_dap_params_length[idx] = length;
@@ -815,6 +817,10 @@ int msm_dolby_dap_param_to_get_control_get(struct snd_kcontrol *kcontrol,
 	if ((copp_idx < 0) || (copp_idx >= MAX_COPPS_PER_PORT)) {
 		pr_debug("%s: get params called before copp open.copp_idx:%d\n",
 			 __func__, copp_idx);
+		return -EINVAL;
+	}
+	if (dolby_dap_params_get.length > 128 - DOLBY_PARAM_PAYLOAD_SIZE) {
+		pr_err("%s: Incorrect parameter length", __func__);
 		return -EINVAL;
 	}
 	params_value = kzalloc(params_length + param_payload_len, GFP_KERNEL);
