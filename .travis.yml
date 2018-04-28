@@ -26,8 +26,8 @@ before_install:
 
 before_script:
 # Download te toolchain
-  - git clone --depth=50 --branch=opt-linaro-7.x https://github.com/krasCGQ/aarch64-linux-android $HOME/LINARO/7.x
-
+  - git clone https://github.com/nathanchance/gcc-prebuilts -b aarch64-linaro-7.x $HOME/LINARO/7.x
+ 
 # Download the Kernel Sources
   - git clone --depth=50 --branch=lineage-15.1 https://github.com/revanthstrakz/crush-mido  $HOME/SK
 
