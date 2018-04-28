@@ -586,7 +586,7 @@ static ssize_t  msm_bus_dbg_update_request_write(struct file *file,
 					MSM_BUS_DBG("Index conversion"
 						" failed\n");
 					rt_mutex_unlock(
-							&msm_bus_dbg_cllist_lock);
+						&msm_bus_dbg_cllist_lock);
 					res = -EFAULT;
 					goto out;
 				}

@@ -3884,12 +3884,12 @@ static int iris_vidioc_s_ext_ctrls(struct file *file, void *priv,
 		memset(&spur_tbl_req, 0, sizeof(spur_tbl_req));
 		data = (ctrl->controls[0]).string;
 		if (copy_from_user(&bytes_to_copy, &((ctrl->controls[0]).size),
-				sizeof(bytes_to_copy))) {
+					sizeof(bytes_to_copy))) {
 			retval = -EFAULT;
 			goto END;
 		}
 		if (copy_from_user(&tmp_buf[0], &data[0],
-				sizeof(tmp_buf))) {
+					sizeof(tmp_buf))) {
 			retval = -EFAULT;
 			goto END;
 		}

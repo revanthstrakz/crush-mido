@@ -804,6 +804,8 @@ static long qbt1000_ioctl(struct file *file, unsigned cmd, unsigned long arg)
 			}
 		}
 
+		app.name[MAX_NAME_SIZE - 1] = '\0';
+
 		/* start the TZ app */
 		rc = qseecom_start_app(&drvdata->app_handle,
 				app.name, app.size);
