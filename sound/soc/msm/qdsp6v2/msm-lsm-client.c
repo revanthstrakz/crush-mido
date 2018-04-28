@@ -875,6 +875,11 @@ static int msm_lsm_ioctl_shared(struct snd_pcm_substream *substream,
 		dev_dbg(rtd->dev, "%s: Get event status\n", __func__);
 		atomic_set(&prtd->event_wait_stop, 0);
 
+		/*
+		 * Release the api lock before wait to allow
+		 * other IOCTLs to be invoked while waiting
+		 * for event
+		 */
 		mutex_unlock(&prtd->lsm_api_lock);
 		rc = wait_event_freezable(prtd->event_wait,
 				(cmpxchg(&prtd->event_avail, 1, 0) ||
@@ -1128,7 +1133,8 @@ static int msm_lsm_ioctl_compat(struct snd_pcm_substream *substream,
 		if (copy_from_user(&userarg32, arg, sizeof(userarg32))) {
 			dev_err(rtd->dev, "%s: err copyuser ioctl %s\n",
 				__func__, "SNDRV_LSM_EVENT_STATUS");
-			return -EFAULT;
+			err = -EFAULT;
+			goto done;
 		}
 
 		if (userarg32.payload_size >
@@ -1281,7 +1287,8 @@ static int msm_lsm_ioctl_compat(struct snd_pcm_substream *substream,
 			dev_err(rtd->dev,
 				"%s: %s: not supported if not using topology\n",
 				__func__, "SET_MODULE_PARAMS_32");
-			return -EINVAL;
+			err = -EINVAL;
+			goto done;
 		}
 
 		if (copy_from_user(&p_data_32, arg,
@@ -1489,7 +1496,8 @@ static int msm_lsm_ioctl(struct snd_pcm_substream *substream,
 			dev_err(rtd->dev,
 				"%s: %s: not supported if not using topology\n",
 				__func__, "SET_MODULE_PARAMS");
-			return -EINVAL;
+			err = -EINVAL;
+			goto done;
 		}
 
 		if (copy_from_user(&p_data, arg,

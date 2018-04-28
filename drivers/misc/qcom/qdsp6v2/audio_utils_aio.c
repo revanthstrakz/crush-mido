@@ -121,6 +121,7 @@ static int audio_aio_ion_lookup_vaddr(struct q6audio_aio *audio, void *addr,
 			addr < region_elt->vaddr + region_elt->len &&
 			addr + len <= region_elt->vaddr + region_elt->len &&
 			addr + len > addr) {
+			/* to avoid integer addition overflow */
 
 			/* offset since we could pass vaddr inside a registerd
 			* ion buffer
